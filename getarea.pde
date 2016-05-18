@@ -7,6 +7,8 @@ PFont font;
 int fontSize = 24;
 boolean isClosed = false;
 float hitDist = 10;
+boolean carryVert = false;
+int vertToCarry = 0;
 
 void setup() {
   size(640, 480, P2D);
@@ -16,12 +18,20 @@ void setup() {
   textSize(fontSize);
   textAlign(CENTER);
   ellipseMode(CENTER);
+  stroke(0);
+  strokeWeight(1);
 }
 
 
 void draw() {
   background(bgColor);
   
+  if (vertList.size() == 2) {
+    PVector pl1 = (PVector) vertList.get(1);
+    PVector pl2 = (PVector) vertList.get(0);
+    line(pl1.x, pl1.y, pl2.x, pl2.y);
+  }
+    
   fill(otherColor);
   beginShape();
   for (int i = 0; i < vertList.size(); i++) {
@@ -37,13 +47,10 @@ void draw() {
   for (int i = 0; i < vertList.size(); i++) {
     PVector p = (PVector) vertList.get(i);
     
-    /*
     if (!isClosed && mousePressed && hitDetect(p.x, p.y, hitDist, hitDist, mouseX, mouseY, hitDist, hitDist)) {
-      p.x = mouseX;
-      p.y = mouseY;
-      vertList.set(i, p);
+      carryVert = true;
+      vertToCarry = i;
     }
-    */
     
     if (isClosed()) {
       fill(closedColor);
@@ -52,9 +59,15 @@ void draw() {
     } else {
       fill(otherColor);
     }
+    
     ellipse(p.x, p.y, 10, 10);
   }
   
+  if (carryVert) {
+    PVector pv = new PVector(mouseX, mouseY);
+    vertList.set(vertToCarry, pv);
+  }
+    
   if (isClosed()) {
     fill(0);
     PVector center = findCenter();
@@ -70,11 +83,15 @@ void keyPressed() {
 }
 
 void mousePressed() {
-  if (!isClosed()) {
+  if (!isClosed() && !carryVert) {
     PVector p = new PVector(mouseX, mouseY);
     vertList.add(p);
     snapClosed(hitDist);
   }
+}
+
+void mouseReleased() {
+  carryVert = false;
 }
 
 boolean isClosed() {
