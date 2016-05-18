@@ -76,10 +76,7 @@ void draw() {
 }
 
 void keyPressed() {
-  if (key == ' ') {
-    vertList = new ArrayList();
-    isClosed = false;
-  }
+  if (key == ' ') reset();
 }
 
 void mousePressed() {
@@ -87,11 +84,18 @@ void mousePressed() {
     PVector p = new PVector(mouseX, mouseY);
     vertList.add(p);
     snapClosed(hitDist);
+  } else if (isClosed()) {
+    reset();
   }
 }
 
 void mouseReleased() {
   carryVert = false;
+}
+
+void reset() {
+    vertList = new ArrayList();
+    isClosed = false;
 }
 
 boolean isClosed() {
