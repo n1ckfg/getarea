@@ -60,7 +60,12 @@ void draw() {
       fill(otherColor);
     }
     
-    ellipse(p.x, p.y, 10, 10);
+    int s = 10;
+    PVector po = (PVector) vertList.get(0);
+    if (i == 0 && vertList.size() > 1 && !isClosed && hitDetect(mouseX, mouseY, hitDist, hitDist, po.x, po.y, hitDist, hitDist)) {
+      s = 15;
+    }
+    ellipse(p.x, p.y, s, s);
   }
   
   if (carryVert) {
